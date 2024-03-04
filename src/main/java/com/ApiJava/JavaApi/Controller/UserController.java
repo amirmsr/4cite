@@ -17,14 +17,11 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 @CrossOrigin(origins = "*", maxAge = 3600)
 @AllArgsConstructor
 public class UserController {
     private UserServiceImplement userServiceImplement;
-//
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
 
     @CrossOrigin
     @GetMapping
