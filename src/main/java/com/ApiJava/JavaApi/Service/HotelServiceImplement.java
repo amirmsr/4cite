@@ -49,10 +49,16 @@ public class HotelServiceImplement {
     throw new BadRequestException("You are not allowed to delete a hotel");
   }
 
-  public Hotel update(Hotel hotel, String token) throws BadRequestException {
+  public Hotel update(Long id, Hotel hotel, String token) throws BadRequestException {
     Optional<User> user = jwtTokenClass.getUserFrom(token);
 
     if (user.isPresent() && user.get().getRole() == 2) {
+      Hotel updatedHotel = hotelRepository.findById(id).orElseThrow(() -> new BadRequestException("Hotel not found"));
+      updatedHotel.setName(hotel.getName());
+      updatedHotel.setDescription(hotel.getDescription());
+      updatedHotel.setLocation(hotel.getLocation());
+      updatedHotel.setPicture_list(hotel.getPicture_list());
+
       return hotelRepository.save(hotel);
     }
 

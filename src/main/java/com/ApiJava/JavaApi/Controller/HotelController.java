@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,7 +37,7 @@ public class HotelController {
   }
 
   @GetMapping(value = "/{id}")
-  public Hotel read(Long id) {
+  public Hotel read(@PathVariable("id") Long id) {
     return hotelServiceImplement.getById(id);
   }
 
@@ -47,13 +48,13 @@ public class HotelController {
   }
 
   @PutMapping(value = "/{id}")
-  public ResponseEntity<Hotel> update(@RequestBody Hotel hotel, @RequestHeader String token) throws BadRequestException {
-    Hotel updatedHotel = hotelServiceImplement.update(hotel, token);
+  public ResponseEntity<Hotel> update(@PathVariable("id") Long id, @RequestBody Hotel hotel, @RequestHeader String token) throws BadRequestException {
+    Hotel updatedHotel = hotelServiceImplement.update(id, hotel, token);
     return new ResponseEntity<>(updatedHotel, HttpStatus.OK);
   }
 
   @DeleteMapping(value = "/{id}")
-  public ResponseEntity<String> delete(Long id, @RequestHeader String token) throws BadRequestException {
+  public ResponseEntity<String> delete(@PathVariable("id") Long id, @RequestHeader String token) throws BadRequestException {
     hotelServiceImplement.delete(id, token);
     return new ResponseEntity<>("Hotel deleted", HttpStatus.OK);
   }
