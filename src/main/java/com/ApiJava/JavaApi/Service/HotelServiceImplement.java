@@ -47,7 +47,7 @@ public class HotelServiceImplement {
     Optional<User> user = jwtTokenClass.getUserFrom(token);
 
     if (user.isPresent() && user.get().getRole() == 1) {
-      newHotel.setOwnerId(user.get().getId());
+      newHotel.setOwner(user.get());
       return hotelRepository.save(newHotel);
     }
 
