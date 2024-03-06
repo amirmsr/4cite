@@ -25,7 +25,7 @@ public class BookingServiceImplement {
     Optional<User> user = jwtTokenClass.getUserFrom(token);
 
     if (user.isPresent()) {
-      return bookingRepository.findAllByUserId(user.get().getId());
+      return bookingRepository.findAllByUserId(user.get());
     }
 
     throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Vous n'êtes pas autorisé à voir les réservations");
