@@ -28,10 +28,10 @@ public class Hotel {
   @JoinColumn(name = "ownerId", referencedColumnName = "id")
   @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
   @JsonIdentityReference(alwaysAsId = true)
-  private User owner;
+  private User ownerId;
 
   private String name;
-  private String location;
+  private String localisation;
   private String description;
   private String picture;
 }
