@@ -47,7 +47,7 @@ public class HotelServiceImplement {
     Optional<User> user = jwtTokenClass.getUserFrom(token);
 
     if (user.isPresent() && (user.get().getRole() == 1 || user.get().getRole() == 2)) {
-      newHotel.setOwner(user.get());
+      newHotel.setOwnerId(user.get());
       return hotelRepository.save(newHotel);
     }
 
@@ -70,7 +70,7 @@ public class HotelServiceImplement {
     if (user.isPresent() && user.get().getRole() == 1) {
       Hotel updatedHotel = hotelRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Hôtel non trouvé"));
       updatedHotel.setName(hotel.getName());
-      updatedHotel.setLocation(hotel.getLocation());
+      updatedHotel.setLocalisation(hotel.getLocalisation());
       updatedHotel.setDescription(hotel.getDescription());
       updatedHotel.setPicture(hotel.getPicture());
       return hotelRepository.save(updatedHotel);
