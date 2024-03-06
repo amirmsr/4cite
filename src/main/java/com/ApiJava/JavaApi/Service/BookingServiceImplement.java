@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class BookingServiceImplement {
+
   private final BookingRepository bookingRepository;
 
   @Autowired

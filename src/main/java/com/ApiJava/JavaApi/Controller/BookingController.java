@@ -30,10 +30,7 @@ public class BookingController {
   private final BookingServiceImplement bookingServiceImplement;
 
   @GetMapping
-  public List<Booking> read(@RequestHeader String token,
-      @RequestParam(defaultValue = "10") int limit,
-      @RequestParam(defaultValue = "name") String sortBy,
-      @RequestParam(defaultValue = "asc") String order)
+  public List<Booking> read(@RequestHeader String token)
   {
     return bookingServiceImplement.get(token);
   }
