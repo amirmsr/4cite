@@ -10,17 +10,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "hotel")
+@Table(name = "booking")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Hotel {
+public class Booking {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private Long ownerId;
-  private String name;
-  private String location;
-  private String description;
-  private String picture;
+  private Long userId;
+  private Long hotelId;
+  private String checkIn;
+  private String checkOut;
 }

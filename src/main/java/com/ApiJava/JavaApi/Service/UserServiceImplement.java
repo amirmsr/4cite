@@ -30,7 +30,7 @@ public class UserServiceImplement {
       return userRepository.findAll();
     }
 
-    throw new BadRequestException("Unauthorized " + jwtTokenClass.getErrorMessage());
+    throw new BadRequestException("Unauthorized");
   }
 
 
@@ -62,7 +62,6 @@ public class UserServiceImplement {
             .withNotBefore(new Date(System.currentTimeMillis() + 1000L))
             .sign(jwtTokenClass.getAlgorithm());
 
-        /*connectionStatus = "successful connection, token: " + jwtToken;*/
         connectionStatus = jwtToken;
       }
     }

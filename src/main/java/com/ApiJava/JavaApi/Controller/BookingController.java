@@ -1,13 +1,13 @@
 package com.ApiJava.JavaApi.Controller;
 
+import com.ApiJava.JavaApi.Model.Booking;
 import com.ApiJava.JavaApi.Model.Hotel;
-import com.ApiJava.JavaApi.Service.HotelServiceImplement;
+import com.ApiJava.JavaApi.Repository.BookingRepository;
+import com.ApiJava.JavaApi.Service.BookingServiceImplement;
+import java.awt.print.Book;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.apache.coyote.BadRequestException;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,42 +23,41 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/hotels")
+@RequestMapping("/bookings")
 @CrossOrigin(origins = "*", maxAge = 3600)
 @AllArgsConstructor
-public class HotelController {
-
-  private HotelServiceImplement hotelServiceImplement;
+public class BookingController {
+  private final BookingServiceImplement bookingServiceImplement;
 
   @GetMapping
-  public List<Hotel> read(@RequestHeader String token,
+  public List<Booking> read(@RequestHeader String token,
       @RequestParam(defaultValue = "10") int limit,
       @RequestParam(defaultValue = "name") String sortBy,
       @RequestParam(defaultValue = "asc") String order)
   {
-    return hotelServiceImplement.get(token, limit, sortBy, order);
+    return bookingServiceImplement.get(token);
   }
 
   @GetMapping(value = "/{id}")
-  public Hotel read(@PathVariable("id") Long id, @RequestHeader String token) {
-    return hotelServiceImplement.getById(id, token);
+  public Booking read(@PathVariable("id") Long id, @RequestHeader String token) {
+    return bookingServiceImplement.getById(id, token);
   }
 
   @PostMapping
-  public ResponseEntity<Hotel> create(@RequestBody Hotel newHotel, @RequestHeader String token) throws BadRequestException {
-    Hotel savedHotel = hotelServiceImplement.post(newHotel, token);
-    return new ResponseEntity<>(savedHotel, HttpStatus.CREATED);
+  public ResponseEntity<Booking> create(@RequestBody Booking newBooking, @RequestHeader String token) {
+    Booking savedBooking = bookingServiceImplement.post(newBooking, token);
+    return new ResponseEntity<>(savedBooking, HttpStatus.CREATED);
   }
 
   @PutMapping(value = "/{id}")
-  public ResponseEntity<Hotel> update(@PathVariable("id") Long id, @RequestBody Hotel hotel, @RequestHeader String token) throws BadRequestException {
-    Hotel updatedHotel = hotelServiceImplement.update(id, hotel, token);
-    return new ResponseEntity<>(updatedHotel, HttpStatus.OK);
+  public ResponseEntity<Booking> update(@PathVariable("id") Long id, @RequestBody Booking booking, @RequestHeader String token) {
+    Booking updatedBooking = bookingServiceImplement.update(id, booking, token);
+    return new ResponseEntity<>(updatedBooking, HttpStatus.OK);
   }
 
   @DeleteMapping(value = "/{id}")
-  public ResponseEntity<String> delete(@PathVariable("id") Long id, @RequestHeader String token) throws BadRequestException {
-    hotelServiceImplement.delete(id, token);
+  public ResponseEntity<String> delete(@PathVariable("id") Long id, @RequestHeader String token) {
+    bookingServiceImplement.delete(id, token);
     return new ResponseEntity<>("Hotel deleted", HttpStatus.OK);
   }
 }

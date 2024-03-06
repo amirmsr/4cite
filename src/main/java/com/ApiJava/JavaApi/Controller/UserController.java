@@ -70,6 +70,4 @@ public class UserController {
     userServiceImplement.deleteById(id, token);
     return new ResponseEntity<>(HttpStatus.OK);
   }
-
-
 }

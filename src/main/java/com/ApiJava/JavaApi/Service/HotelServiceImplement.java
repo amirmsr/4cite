@@ -7,10 +7,12 @@ import com.ApiJava.JavaApi.Utils.JwtToken;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @AllArgsConstructor
@@ -21,47 +23,59 @@ public class HotelServiceImplement {
   @Autowired
   private JwtToken jwtTokenClass;
 
-  public List<Hotel> get(Pageable pageable) {
-    return hotelRepository.findAll(pageable).getContent();
-  }
-
-  public Hotel getById(Long id) {
-    return hotelRepository.findById(id).orElse(null);
-  }
-
-  public Hotel post(Hotel newHotel, String token) throws BadRequestException {
+  public List<Hotel> get(String token, int limit, String sortBy, String order) {
     Optional<User> user = jwtTokenClass.getUserFrom(token);
 
-    if (user.isPresent() && user.get().getRole() == 2) {
+    if (user.isPresent()) {
+      return hotelRepository.findAll(PageRequest.of(0, limit, Sort.by(Sort.Direction.fromString(order), sortBy))).getContent();
+    }
+
+    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Vous n'êtes pas autorisé à voir les hôtels");
+  }
+
+  public Hotel getById(Long id, String token) {
+    Optional<User> user = jwtTokenClass.getUserFrom(token);
+
+    if (user.isPresent()) {
+      return hotelRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Hôtel non trouvé"));
+    }
+
+    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Vous n'êtes pas autorisé à voir l'hôtel");
+  }
+
+  public Hotel post(Hotel newHotel, String token) {
+    Optional<User> user = jwtTokenClass.getUserFrom(token);
+
+    if (user.isPresent() && user.get().getRole() == 1) {
+      newHotel.setOwnerId(user.get().getId());
       return hotelRepository.save(newHotel);
     }
 
-    throw new BadRequestException("You are not allowed to create a hotel");
+    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Vous n'êtes pas autorisé à créer un hôtel");
   }
 
-  public void delete(Long id, String token) throws BadRequestException {
+  public void delete(Long id, String token) {
     Optional<User> user = jwtTokenClass.getUserFrom(token);
 
-    if (user.isPresent() && user.get().getRole() == 2) {
+    if (user.isPresent() && user.get().getRole() == 1) {
       hotelRepository.deleteById(id);
     }
 
-    throw new BadRequestException("You are not allowed to delete a hotel");
+    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Vous n'êtes pas autorisé à supprimer l'hôtel");
   }
 
-  public Hotel update(Long id, Hotel hotel, String token) throws BadRequestException {
+  public Hotel update(Long id, Hotel hotel, String token) {
     Optional<User> user = jwtTokenClass.getUserFrom(token);
 
-    if (user.isPresent() && user.get().getRole() == 2) {
-      Hotel updatedHotel = hotelRepository.findById(id).orElseThrow(() -> new BadRequestException("Hotel not found"));
+    if (user.isPresent() && user.get().getRole() == 1) {
+      Hotel updatedHotel = hotelRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Hôtel non trouvé"));
       updatedHotel.setName(hotel.getName());
-      updatedHotel.setDescription(hotel.getDescription());
       updatedHotel.setLocation(hotel.getLocation());
-      updatedHotel.setPicture_list(hotel.getPicture_list());
-
-      return hotelRepository.save(hotel);
+      updatedHotel.setDescription(hotel.getDescription());
+      updatedHotel.setPicture(hotel.getPicture());
+      return hotelRepository.save(updatedHotel);
     }
 
-    throw new BadRequestException("You are not allowed to update a hotel");
+    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Vous n'êtes pas autorisé à mettre à jour l'hôtel");
   }
 }
