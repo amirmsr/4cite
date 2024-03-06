@@ -45,7 +45,7 @@ public class BookingServiceImplement {
     Optional<User> user = jwtTokenClass.getUserFrom(token);
 
     if (user.isPresent()) {
-      newBooking.setUserId(user.get().getId());
+      newBooking.setUserId(user.get());
       return bookingRepository.save(newBooking);
     }
 
