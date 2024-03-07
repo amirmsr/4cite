@@ -6,5 +6,6 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-  List<Booking> findAllByUserId(User userId);
+
+  List<Booking> findAllByUser(User user);
 }
