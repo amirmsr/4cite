@@ -6,10 +6,10 @@ import com.ApiJava.JavaApi.Controller.UserController;
 import com.ApiJava.JavaApi.Repository.BookingRepository;
 import com.ApiJava.JavaApi.Repository.HotelRepository;
 import com.ApiJava.JavaApi.Repository.UserRepository;
-import com.ApiJava.JavaApi.Service.BookingServiceImplement;
-import com.ApiJava.JavaApi.Service.HotelServiceImplement;
-import com.ApiJava.JavaApi.Service.UserServiceImplement;
-import com.ApiJava.JavaApi.Utils.JwtToken;
+import com.ApiJava.JavaApi.Service.BookingService;
+import com.ApiJava.JavaApi.Service.HotelService;
+import com.ApiJava.JavaApi.Service.UserService;
+import com.ApiJava.JavaApi.Utils.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-@ContextConfiguration(classes = {BookingController.class, HotelController.class, UserController.class, BookingServiceImplement.class, HotelServiceImplement.class, UserServiceImplement.class, JwtToken.class})
+@ContextConfiguration(classes = {BookingController.class, HotelController.class, UserController.class, BookingService.class, HotelService.class, UserService.class, JwtUtil.class})
 public class BaseControllerTest {
   @Autowired
   protected MockMvc mvc;

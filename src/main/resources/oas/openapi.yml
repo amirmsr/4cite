@@ -1,0 +1,785 @@
+openapi: 3.0.3
+info:
+  title: Process Compliance Tool
+  version: 1.0.0
+servers:
+  - url: https://localhost:8080
+tags:
+  - name: Users
+    description: Users of the hotel app
+  - name: Hotels
+    description: Hotels registered by a host
+  - name: Bookings
+    description: Booking of a hotel by a user
+paths:
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Get all users
+      operationId: getAllUsers
+      parameters:
+        - name: token
+          in: header
+          description: jwt token
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/userDetails"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "422":
+          $ref: "#/components/responses/422"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+    post:
+      tags:
+        - Users
+      summary: Create user
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/userRequest"
+      responses:
+        "201":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/userDetails"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "422":
+          $ref: "#/components/responses/422"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+  /users/login:
+    post:
+      tags:
+        - Users
+      summary: Log user in
+      operationId: logUserIn
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/login"
+      responses:
+        "201":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/jwtToken"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "422":
+          $ref: "#/components/responses/422"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Get a user by it's id
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          description: ID of a user
+          required: true
+          schema:
+            type: integer
+        - name: token
+          in: header
+          description: jwt token
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/userDetails"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "422":
+          $ref: "#/components/responses/422"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+    put:
+      tags:
+        - Users
+      summary: Update a user
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          description: ID of a user
+          required: true
+          schema:
+            type: integer
+        - name: token
+          in: header
+          description: jwt token
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/userRequest"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/userDetails"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "422":
+          $ref: "#/components/responses/422"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+    delete:
+      tags:
+        - Users
+      summary: Delete a user
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          description: ID of a user
+          required: true
+          schema:
+            type: integer
+        - name: token
+          in: header
+          description: jwt token
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: User deleted succesfully
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "422":
+          $ref: "#/components/responses/422"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+  /hotels:
+    get:
+      tags:
+        - Hotels
+      summary: Get all hotels
+      operationId: getAllHotels
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/hotelDetails"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "422":
+          $ref: "#/components/responses/422"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+    post:
+      tags:
+        - Hotels
+      summary: Create hotel
+      operationId: createHotel
+      parameters:
+        - name: token
+          in: header
+          description: jwt token
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/hotelRequest"
+      responses:
+        "201":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/hotelDetails"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "422":
+          $ref: "#/components/responses/422"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+  /hotels/{id}:
+    get:
+      tags:
+        - Hotels
+      summary: Get a hotel by it's id
+      operationId: getHotelById
+      parameters:
+        - name: id
+          in: path
+          description: ID of a hotel
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/hotelDetails"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "422":
+          $ref: "#/components/responses/422"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+    put:
+      tags:
+        - Hotels
+      summary: Update a hotel
+      operationId: updateHotel
+      parameters:
+        - name: id
+          in: path
+          description: ID of a hotel
+          required: true
+          schema:
+            type: integer
+        - name: token
+          in: header
+          description: jwt token
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/hotelRequest"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/hotelDetails"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "422":
+          $ref: "#/components/responses/422"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+    delete:
+      tags:
+        - Hotels
+      summary: Delete a hotel
+      operationId: deleteHotel
+      parameters:
+        - name: id
+          in: path
+          description: ID of a hotel
+          required: true
+          schema:
+            type: integer
+        - name: token
+          in: header
+          description: jwt token
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Hotel deleted succesfully
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "422":
+          $ref: "#/components/responses/422"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+  /bookings:
+    get:
+      tags:
+        - Bookings
+      summary: Get all bookings
+      operationId: getAllBookings
+      parameters:
+        - name: token
+          in: header
+          description: jwt token
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/bookingDetails"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "422":
+          $ref: "#/components/responses/422"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+    post:
+      tags:
+        - Bookings
+      summary: Create booking
+      operationId: createBooking
+      parameters:
+        - name: token
+          in: header
+          description: jwt token
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/bookingRequest"
+      responses:
+        "201":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/bookingDetails"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "422":
+          $ref: "#/components/responses/422"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+  /bookings/{id}:
+    get:
+      tags:
+        - Bookings
+      summary: Get a booking by it's id
+      operationId: getBookingById
+      parameters:
+        - name: id
+          in: path
+          description: ID of a booking
+          required: true
+          schema:
+            type: integer
+        - name: token
+          in: header
+          description: jwt token
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/bookingDetails"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "422":
+          $ref: "#/components/responses/422"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+    put:
+      tags:
+        - Bookings
+      summary: Update a booking
+      operationId: updateBooking
+      parameters:
+        - name: id
+          in: path
+          description: ID of a booking
+          required: true
+          schema:
+            type: integer
+        - name: token
+          in: header
+          description: jwt token
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/bookingRequest"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/bookingDetails"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "422":
+          $ref: "#/components/responses/422"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+    delete:
+      tags:
+        - Bookings
+      summary: Delete a booking
+      operationId: deleteBooking
+      parameters:
+        - name: id
+          in: path
+          description: ID of a booking
+          required: true
+          schema:
+            type: integer
+        - name: token
+          in: header
+          description: jwt token
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: booking deleted succesfully
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "422":
+          $ref: "#/components/responses/422"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+components:
+  schemas:
+    userAttributes:
+      title: userAttributes
+      type: object
+      properties:
+        name:
+          type: string
+        mail:
+          type: string
+        password:
+          type: string
+        role:
+          $ref: "#/components/schemas/userRole"
+    userModel:
+      title: userModel
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/userAttributes"
+    userDetails:
+      title: userDetails
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/idEntity"
+        - $ref: "#/components/schemas/userModel"
+    userRequest:
+      title: userRequest
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/userModel"
+    hotelAttributes:
+      title: hotelAttributes
+      type: object
+      properties:
+        name:
+          type: string
+        localisation:
+          type: string
+        description:
+          type: string
+        picture:
+          type: string
+    hotelModel:
+      title: hotelModel
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/hotelAttributes"
+    hotelDetails:
+      title: hotelDetails
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/idEntity"
+        - $ref: "#/components/schemas/ownerIdEntity"
+        - $ref: "#/components/schemas/hotelModel"
+    hotelRequest:
+      title: hotelRequest
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/hotelModel"
+    ownerIdEntity:
+      title: ownerId
+      type: object
+      properties:
+        ownerId:
+          $ref: "#/components/schemas/primaryId"
+    bookingAttributes:
+      title: bookingAttributes
+      type: object
+      properties:
+        checkIn:
+          type: string
+        checkOut:
+          type: string
+    bookingModel:
+      title: bookingModel
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/hotelIdEntity"
+        - $ref: "#/components/schemas/bookingAttributes"
+    bookingDetails:
+      title: bookingDetails
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/idEntity"
+        - $ref: "#/components/schemas/userIdEntity"
+        - $ref: "#/components/schemas/bookingModel"
+    bookingRequest:
+      title: bookingRequest
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/bookingModel"
+    userIdEntity:
+      title: userId
+      type: object
+      properties:
+        userId:
+          $ref: "#/components/schemas/primaryId"
+    hotelIdEntity:
+      title: hotelId
+      type: object
+      properties:
+        hotelId:
+          $ref: "#/components/schemas/primaryId"
+    primaryId:
+      title: Id
+      type: integer
+      format: int64
+    idEntity:
+      title: id
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/primaryId"
+    login:
+      title: login
+      type: object
+      properties:
+        mail:
+          type: string
+        password:
+          type: string
+    jwtToken:
+      title: jwtToken
+      type: object
+      properties:
+        token:
+          type: string
+    ErrorModel:
+      title: errorModel
+      description: Error model following RFC7807
+      type: object
+      properties:
+        title:
+          type: string
+          description: error title
+        detail:
+          type: string
+          description: error detail
+    ## Enumerations
+    userRole:
+      type: string
+      enum:
+        - admin
+        - host
+        - client
+  responses:
+    "400":
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorModel"
+    "401":
+      description: Unauthorized, you are not authenticated
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorModel"
+    "403":
+      description: Forbidden, you don't have the permissions necessary
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorModel"
+    "404":
+      description: Ressource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorModel"
+    "422":
+      description: Unprocessable entity
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorModel"
+    "500":
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorModel"
+    "503":
+      description: Service unavailable
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorModel"

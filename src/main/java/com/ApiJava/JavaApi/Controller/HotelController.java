@@ -1,64 +1,64 @@
 package com.ApiJava.JavaApi.Controller;
 
-import com.ApiJava.JavaApi.Model.Hotel;
-import com.ApiJava.JavaApi.Service.HotelServiceImplement;
+import com.ApiJava.JavaApi.Service.HotelService;
+import com.ApiJava.JavaApi.HotelsApi;
+import com.ApiJava.JavaApi.model.HotelDetails;
+import com.ApiJava.JavaApi.model.HotelRequest;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import org.apache.coyote.BadRequestException;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/hotels")
-@CrossOrigin(origins = "*", maxAge = 3600)
-@AllArgsConstructor
-public class HotelController {
+public class HotelController implements HotelsApi {
 
-  private HotelServiceImplement hotelServiceImplement;
+  private final HotelService hotelService;
 
-  @GetMapping
-  public List<Hotel> read(@RequestHeader String token,
-      @RequestParam(defaultValue = "10") int limit,
-      @RequestParam(defaultValue = "name") String sortBy,
-      @RequestParam(defaultValue = "asc") String order)
-  {
-    return hotelServiceImplement.get(token, limit, sortBy, order);
+  public HotelController(HotelService hotelService) {
+    this.hotelService = hotelService;
   }
 
-  @GetMapping(value = "/{id}")
-  public Hotel read(@PathVariable("id") Long id, @RequestHeader String token) {
-    return hotelServiceImplement.getById(id, token);
-  }
-
-  @PostMapping
-  public ResponseEntity<Hotel> create(@RequestBody Hotel newHotel, @RequestHeader String token) throws BadRequestException {
-    Hotel savedHotel = hotelServiceImplement.post(newHotel, token);
+  @Override
+  public ResponseEntity<HotelDetails> createHotel(
+      String token,
+      HotelRequest hotelRequest
+  ) {
+    HotelDetails savedHotel = hotelService.post(hotelRequest, token);
     return new ResponseEntity<>(savedHotel, HttpStatus.CREATED);
   }
 
-  @PutMapping(value = "/{id}")
-  public ResponseEntity<Hotel> update(@PathVariable("id") Long id, @RequestBody Hotel hotel, @RequestHeader String token) throws BadRequestException {
-    Hotel updatedHotel = hotelServiceImplement.update(id, hotel, token);
-    return new ResponseEntity<>(updatedHotel, HttpStatus.OK);
+  @Override
+  public ResponseEntity<Void> deleteHotel(
+      Integer id,
+      String token
+  ) {
+    hotelService.delete(Long.valueOf(id), token);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
-  @DeleteMapping(value = "/{id}")
-  public ResponseEntity<String> delete(@PathVariable("id") Long id, @RequestHeader String token) throws BadRequestException {
-    hotelServiceImplement.delete(id, token);
-    return new ResponseEntity<>("Hotel deleted", HttpStatus.OK);
+  @Override
+  public ResponseEntity<List<HotelDetails>> getAllHotels(
+
+  ) {
+    List<HotelDetails> hotelDetails = hotelService.get();
+    return new ResponseEntity<>(hotelDetails, HttpStatus.OK);
+  }
+
+  @Override
+  public ResponseEntity<HotelDetails> getHotelById(
+      Integer id
+  ) {
+    HotelDetails hotelDetails = hotelService.getById(Long.valueOf(id));
+    return new ResponseEntity<>(hotelDetails, HttpStatus.OK);
+  }
+
+  @Override
+  public ResponseEntity<HotelDetails> updateHotel(
+      Integer id,
+      String token,
+      HotelRequest hotelRequest
+  ) {
+    HotelDetails updatedHotel = hotelService.update(Long.valueOf(id), hotelRequest, token);
+    return new ResponseEntity<>(updatedHotel, HttpStatus.OK);
   }
 }

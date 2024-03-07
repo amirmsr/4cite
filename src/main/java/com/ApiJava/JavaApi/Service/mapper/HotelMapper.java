@@ -1,0 +1,16 @@
+package com.ApiJava.JavaApi.Service.mapper;
+
+import com.ApiJava.JavaApi.Model.Hotel;
+import com.ApiJava.JavaApi.model.HotelDetails;
+import com.ApiJava.JavaApi.model.HotelRequest;
+import java.util.List;
+import org.mapstruct.CollectionMappingStrategy;
+import org.mapstruct.Mapper;
+
+@Mapper(componentModel = "spring", collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED)
+public interface HotelMapper {
+  Hotel toEntity(HotelRequest hotelRequest);
+  HotelDetails toResource(Hotel hotel);
+
+  List<HotelDetails> toResource(List<Hotel> hotels);
+}
