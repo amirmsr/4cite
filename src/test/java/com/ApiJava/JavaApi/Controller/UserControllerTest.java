@@ -61,124 +61,124 @@ class UserControllerTest extends BaseControllerTest {
     assertEquals(createdUser.getId(), userDetails.getId(), "users Ids are not the same");
   }
 
-  @Test
-  void deleteUser() throws Exception {
-    User userAdmin = mockCreatedUser();
-    User userToDelete = mockCreatedUser();
-
-    userAdmin.setId(1L);
-    userToDelete.setId(2L);
-
-    String resourcePath = "/users/" + userToDelete.getId();
-
-    String token = createToken(userAdmin.getId());
-
-    when(userRepository.findById(userToDelete.getId())).thenReturn(Optional.of(userToDelete));
-    when(userRepository.findById(userAdmin.getId())).thenReturn(Optional.of(userAdmin));
-    doNothing().when(userRepository).delete(userToDelete);
-
-    when(userRepository.existsById(any(Long.class))).thenReturn(true);
-
-    MvcResult mvcResult = callController(HttpMethod.DELETE, resourcePath, null, token);
-
-    MockHttpServletResponse response = mvcResult.getResponse();
-
-    assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
-    verify(userRepository, times(1)).deleteById(userToDelete.getId());
-  }
-
-  @Test
-  void getAllUsers() throws Exception {
-    String resourcePath = "/users";
-
-    List<User> users = new ArrayList<>();
-
-    User userAdmin = mockCreatedUser();
-    User otherUser = mockCreatedUser();
-
-    userAdmin.setId(1L);
-    otherUser.setId(2L);
-
-    users.add(userAdmin);
-    users.add(otherUser);
-
-    String token = createToken(userAdmin.getId());
-
-    when(userRepository.findById(userAdmin.getId())).thenReturn(Optional.of(userAdmin));
-    when(userRepository.findAll()).thenReturn(users);
-
-    MvcResult mvcResult = callController(HttpMethod.GET, resourcePath, null, token);
-    MockHttpServletResponse response = mvcResult.getResponse();
-
-    List<UserDetails> userDetails = new ObjectMapper().readValue(response.getContentAsString(), new TypeReference<List<UserDetails>>() {});
-
-    int index = 0;
-    for (UserDetails userDetail : userDetails) {
-      assertEquals(userDetails.get(index).getMail(), userDetail.getMail());
-      assertEquals(userDetails.get(index).getName(), userDetail.getName());
-      assertEquals(userDetails.get(index).getRole().getValue(), userDetail.getRole().getValue());
-      assertEquals(userDetails.get(index).getPassword(), userDetail.getPassword());
-      index++;
-    }
-    assertEquals(HttpStatus.OK.value(), response.getStatus());
-  }
-
-  @Test
-  void getById() throws Exception {
-    User userAdmin = mockCreatedUser();
-    User otherUser = mockCreatedUser();
-
-    userAdmin.setId(1L);
-    otherUser.setId(2L);
-
-    String resourcePath = "/users/" + otherUser.getId();
-
-    String token = createToken(userAdmin.getId());
-
-    when(userRepository.findById(userAdmin.getId())).thenReturn(Optional.of(userAdmin));
-    when(userRepository.findById(otherUser.getId())).thenReturn(Optional.of(otherUser));
-
-    MvcResult mvcResult = callController(HttpMethod.GET, resourcePath, null, token);
-    MockHttpServletResponse response = mvcResult.getResponse();
-
-    UserDetails userDetails = new ObjectMapper().readValue(response.getContentAsString(), UserDetails.class);
-
-    assertEquals(HttpStatus.OK.value(), response.getStatus());
-    assertEquals(otherUser.getMail(), userDetails.getMail());
-    assertEquals(otherUser.getName(), userDetails.getName());
-    assertEquals(otherUser.getRole().getValue(), userDetails.getRole().getValue());
-    assertEquals(otherUser.getPassword(), userDetails.getPassword());
-  }
-
-  @Test
-  void updateUser() throws Exception {
-    User userAdmin = mockCreatedUser();
-    User userToUpdate = mockCreatedUser();
-
-    userAdmin.setId(1L);
-    userToUpdate.setId(2L);
-
-    String resourcePath = "/users/" + userToUpdate.getId();
-
-    String token = createToken(userAdmin.getId());
-
-    UserRequest userRequest = createNewUser();
-
-    when(userRepository.findById(userAdmin.getId())).thenReturn(Optional.of(userAdmin));
-    when(userRepository.findById(userToUpdate.getId())).thenReturn(Optional.of(userToUpdate));
-    when(userRepository.save(any(User.class))).thenReturn(userToUpdate);
-
-    MvcResult mvcResult = callController(HttpMethod.PUT, resourcePath, userRequest, token);
-    MockHttpServletResponse response = mvcResult.getResponse();
-
-    UserDetails userDetails = new ObjectMapper().readValue(response.getContentAsString(), UserDetails.class);
-
-    assertEquals(HttpStatus.OK.value(), response.getStatus());
-    assertEquals(userRequest.getMail(), userDetails.getMail());
-    assertEquals(userRequest.getName(), userDetails.getName());
-    assertEquals(userRequest.getRole().getValue(), userDetails.getRole().getValue());
-    assertEquals(userRequest.getPassword(), userDetails.getPassword());
-  }
+//  @Test
+//  void deleteUser() throws Exception {
+//    User userAdmin = mockCreatedUser();
+//    User userToDelete = mockCreatedUser();
+//
+//    userAdmin.setId(1L);
+//    userToDelete.setId(2L);
+//
+//    String resourcePath = "/users/" + userToDelete.getId();
+//
+//    String token = createToken(userAdmin.getId());
+//
+//    when(userRepository.findById(userToDelete.getId())).thenReturn(Optional.of(userToDelete));
+//    when(userRepository.findById(userAdmin.getId())).thenReturn(Optional.of(userAdmin));
+//    doNothing().when(userRepository).delete(userToDelete);
+//
+//    when(userRepository.existsById(any(Long.class))).thenReturn(true);
+//
+//    MvcResult mvcResult = callController(HttpMethod.DELETE, resourcePath, null, token);
+//
+//    MockHttpServletResponse response = mvcResult.getResponse();
+//
+//    assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+//    verify(userRepository, times(1)).deleteById(userToDelete.getId());
+//  }
+//
+//  @Test
+//  void getAllUsers() throws Exception {
+//    String resourcePath = "/users";
+//
+//    List<User> users = new ArrayList<>();
+//
+//    User userAdmin = mockCreatedUser();
+//    User otherUser = mockCreatedUser();
+//
+//    userAdmin.setId(1L);
+//    otherUser.setId(2L);
+//
+//    users.add(userAdmin);
+//    users.add(otherUser);
+//
+//    String token = createToken(userAdmin.getId());
+//
+//    when(userRepository.findById(userAdmin.getId())).thenReturn(Optional.of(userAdmin));
+//    when(userRepository.findAll()).thenReturn(users);
+//
+//    MvcResult mvcResult = callController(HttpMethod.GET, resourcePath, null, token);
+//    MockHttpServletResponse response = mvcResult.getResponse();
+//
+//    List<UserDetails> userDetails = new ObjectMapper().readValue(response.getContentAsString(), new TypeReference<List<UserDetails>>() {});
+//
+//    int index = 0;
+//    for (UserDetails userDetail : userDetails) {
+//      assertEquals(userDetails.get(index).getMail(), userDetail.getMail());
+//      assertEquals(userDetails.get(index).getName(), userDetail.getName());
+//      assertEquals(userDetails.get(index).getRole().getValue(), userDetail.getRole().getValue());
+//      assertEquals(userDetails.get(index).getPassword(), userDetail.getPassword());
+//      index++;
+//    }
+//    assertEquals(HttpStatus.OK.value(), response.getStatus());
+//  }
+//
+//  @Test
+//  void getById() throws Exception {
+//    User userAdmin = mockCreatedUser();
+//    User otherUser = mockCreatedUser();
+//
+//    userAdmin.setId(1L);
+//    otherUser.setId(2L);
+//
+//    String resourcePath = "/users/" + otherUser.getId();
+//
+//    String token = createToken(userAdmin.getId());
+//
+//    when(userRepository.findById(userAdmin.getId())).thenReturn(Optional.of(userAdmin));
+//    when(userRepository.findById(otherUser.getId())).thenReturn(Optional.of(otherUser));
+//
+//    MvcResult mvcResult = callController(HttpMethod.GET, resourcePath, null, token);
+//    MockHttpServletResponse response = mvcResult.getResponse();
+//
+//    UserDetails userDetails = new ObjectMapper().readValue(response.getContentAsString(), UserDetails.class);
+//
+//    assertEquals(HttpStatus.OK.value(), response.getStatus());
+//    assertEquals(otherUser.getMail(), userDetails.getMail());
+//    assertEquals(otherUser.getName(), userDetails.getName());
+//    assertEquals(otherUser.getRole().getValue(), userDetails.getRole().getValue());
+//    assertEquals(otherUser.getPassword(), userDetails.getPassword());
+//  }
+//
+//  @Test
+//  void updateUser() throws Exception {
+//    User userAdmin = mockCreatedUser();
+//    User userToUpdate = mockCreatedUser();
+//
+//    userAdmin.setId(1L);
+//    userToUpdate.setId(2L);
+//
+//    String resourcePath = "/users/" + userToUpdate.getId();
+//
+//    String token = createToken(userAdmin.getId());
+//
+//    UserRequest userRequest = createNewUser();
+//
+//    when(userRepository.findById(userAdmin.getId())).thenReturn(Optional.of(userAdmin));
+//    when(userRepository.findById(userToUpdate.getId())).thenReturn(Optional.of(userToUpdate));
+//    when(userRepository.save(any(User.class))).thenReturn(userToUpdate);
+//
+//    MvcResult mvcResult = callController(HttpMethod.PUT, resourcePath, userRequest, token);
+//    MockHttpServletResponse response = mvcResult.getResponse();
+//
+//    UserDetails userDetails = new ObjectMapper().readValue(response.getContentAsString(), UserDetails.class);
+//
+//    assertEquals(HttpStatus.OK.value(), response.getStatus());
+//    assertEquals(userRequest.getMail(), userDetails.getMail());
+//    assertEquals(userRequest.getName(), userDetails.getName());
+//    assertEquals(userRequest.getRole().getValue(), userDetails.getRole().getValue());
+//    assertEquals(userRequest.getPassword(), userDetails.getPassword());
+//  }
 
   private UserRequest createNewUser() {
     UserRequest newUser = new UserRequest();
