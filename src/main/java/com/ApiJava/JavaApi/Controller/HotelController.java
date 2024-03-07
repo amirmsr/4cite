@@ -7,9 +7,11 @@ import com.ApiJava.JavaApi.model.HotelRequest;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class HotelController implements HotelsApi {
 
   private final HotelService hotelService;
