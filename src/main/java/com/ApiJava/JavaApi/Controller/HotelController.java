@@ -31,12 +31,9 @@ public class HotelController {
   private HotelServiceImplement hotelServiceImplement;
 
   @GetMapping
-  public List<Hotel> read(@RequestHeader String token,
-      @RequestParam(defaultValue = "10") int limit,
-      @RequestParam(defaultValue = "name") String sortBy,
-      @RequestParam(defaultValue = "asc") String order)
+  public List<Hotel> read()
   {
-    return hotelServiceImplement.get(token, limit, sortBy, order);
+    return hotelServiceImplement.get();
   }
 
   @GetMapping(value = "/{id}")

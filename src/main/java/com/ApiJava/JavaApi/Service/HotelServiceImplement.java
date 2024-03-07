@@ -23,14 +23,10 @@ public class HotelServiceImplement {
   @Autowired
   private JwtToken jwtTokenClass;
 
-  public List<Hotel> get(String token, int limit, String sortBy, String order) {
-    Optional<User> user = jwtTokenClass.getUserFrom(token);
+  public List<Hotel> get() {
 
-    if (user.isPresent()) {
-      return hotelRepository.findAll(PageRequest.of(0, limit, Sort.by(Sort.Direction.fromString(order), sortBy))).getContent();
-    }
+    return hotelRepository.findAll();
 
-    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Vous n'êtes pas autorisé à voir les hôtels");
   }
 
   public Hotel getById(Long id, String token) {
