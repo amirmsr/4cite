@@ -53,9 +53,9 @@ public class UserService {
 
       // Delete the user by ID
       userRepository.deleteById(id);
+    } else {
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
     }
-
-    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
   }
 
   public List<UserDetails> get(String token) {
@@ -84,33 +84,24 @@ public class UserService {
 
 
   public JwtToken login(Login login) {
-    String connectionStatus = "not logged";
-
     Optional<User> user = userRepository.findByMail(login.getMail());
-
-    JwtToken jwtToken = new JwtToken();
 
     if (user.isEmpty()) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with mail: " + login.getMail());
-    } else {
-      if (user.get().getPassword().equals(login.getPassword())) {
-        jwtToken.setToken(JWT.create()
-            .withIssuer("Baeldung")
-            .withClaim("userId", user.get().getId())
-            .withIssuedAt(new Date())
-            .withExpiresAt(new Date(System.currentTimeMillis() + 60 * 60 * 1000L))
-            .withJWTId(UUID.randomUUID()
-                .toString())
-            .withNotBefore(new Date(System.currentTimeMillis() + 1000L))
-            .sign(jwtUtilClass.getAlgorithm()));
-      }
     }
 
-    return jwtToken;
+    if (user.get().getPassword().equals(login.getPassword())) {
+      JwtToken token = new JwtToken();
+      token.setToken(jwtUtilClass.createToken(user.get().getId()));
+      return token;
+    }
+
+    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "incorrect password");
   }
 
   public UserDetails updateById(Long id, String token, UserRequest userRequest) {
     Optional<User> user = jwtUtilClass.getUserFrom(token);
+
 
     if (user.isPresent() && (user.get().getRole().equals(UserRoleEnum.ADMIN) || user.get().getId().equals(id))) {
       User existingUser = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with id: " + id));

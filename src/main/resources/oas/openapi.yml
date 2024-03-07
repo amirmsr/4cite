@@ -647,18 +647,18 @@ components:
       type: object
       allOf:
         - $ref: "#/components/schemas/idEntity"
-        - $ref: "#/components/schemas/ownerIdEntity"
+        - $ref: "#/components/schemas/hostIdEntity"
         - $ref: "#/components/schemas/hotelModel"
     hotelRequest:
       title: hotelRequest
       type: object
       allOf:
         - $ref: "#/components/schemas/hotelModel"
-    ownerIdEntity:
-      title: ownerId
+    hostIdEntity:
+      title: hostId
       type: object
       properties:
-        ownerId:
+        hostId:
           $ref: "#/components/schemas/primaryId"
     bookingAttributes:
       title: bookingAttributes

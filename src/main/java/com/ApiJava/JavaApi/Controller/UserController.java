@@ -32,7 +32,7 @@ public class UserController implements UsersApi {
   @Override
   public ResponseEntity<Void> deleteUser(Integer id, String token) {
     userService.deleteById(Long.valueOf(id), token);
-    return new ResponseEntity<>(HttpStatus.OK);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   @Override

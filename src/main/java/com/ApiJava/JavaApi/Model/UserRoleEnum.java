@@ -1,5 +1,7 @@
 package com.ApiJava.JavaApi.Model;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum UserRoleEnum {
   ADMIN("admin"),
 
@@ -20,6 +22,11 @@ public enum UserRoleEnum {
       }
     }
     throw new IllegalArgumentException("Unexpected value '" + value + "'");
+  }
+
+  @JsonValue
+  public String getValue() {
+    return value;
   }
 
   @Override
