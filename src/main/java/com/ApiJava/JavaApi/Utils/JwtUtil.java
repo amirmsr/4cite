@@ -53,7 +53,6 @@ public class JwtUtil {
 
   public Optional<User> getUserFrom(String token) {
     Long userId = getUserIdFrom(token);
-    List<User> users = userRepository.findAll();
     return userRepository.findById(userId);
   }
 
