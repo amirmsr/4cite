@@ -17,6 +17,4 @@ public interface BookingMapper {
   @Mapping(target = "hotelId", source = "hotel.id")
   BookingDetails toResource(Booking booking);
 
-  List<BookingDetails> toResource(List<Booking> bookings);
-
 }

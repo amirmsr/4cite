@@ -8,6 +8,7 @@ import com.ApiJava.JavaApi.Service.mapper.BookingMapper;
 import com.ApiJava.JavaApi.Utils.JwtUtil;
 import com.ApiJava.JavaApi.model.BookingDetails;
 import com.ApiJava.JavaApi.model.BookingRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
@@ -55,10 +56,18 @@ public class BookingService {
 
     if (user.isPresent() && user.get().getRole().equals(UserRoleEnum.ADMIN)) {
       List<Booking> bookings = bookingRepository.findAll();
-      return bookingMapper.toResource(bookings);
+      List<BookingDetails> bookingDetails = new ArrayList<>();
+      for (Booking booking : bookings) {
+        bookingDetails.add(bookingMapper.toResource(booking));
+      }
+      return bookingDetails;
     } else if (user.isPresent()) {
       List<Booking> bookings = bookingRepository.findAllByUser(user.get());
-      return bookingMapper.toResource(bookings);
+      List<BookingDetails> bookingDetails = new ArrayList<>();
+      for (Booking booking : bookings) {
+        bookingDetails.add(bookingMapper.toResource(booking));
+      }
+      return bookingDetails;
     }
 
     throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Vous n'êtes pas autorisé à voir les réservations");

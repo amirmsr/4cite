@@ -8,6 +8,7 @@ import com.ApiJava.JavaApi.Service.mapper.HotelMapper;
 import com.ApiJava.JavaApi.Utils.JwtUtil;
 import com.ApiJava.JavaApi.model.HotelDetails;
 import com.ApiJava.JavaApi.model.HotelRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
@@ -42,7 +43,12 @@ public class HotelService {
   }
 
   public List<HotelDetails> get() {
-    return hotelMapper.toResource(hotelRepository.findAll());
+    List<HotelDetails> hotelDetails = new ArrayList<>();
+    List<Hotel> hotels = hotelRepository.findAll();
+    for (Hotel hotel : hotels) {
+      hotelDetails.add(hotelMapper.toResource(hotel));
+    }
+    return hotelDetails;
   }
 
   public HotelDetails getById(Long id) {

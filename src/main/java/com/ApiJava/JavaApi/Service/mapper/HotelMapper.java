@@ -14,6 +14,4 @@ public interface HotelMapper {
 
   @Mapping(target = "hostId", source = "host.id")
   HotelDetails toResource(Hotel hotel);
-
-  List<HotelDetails> toResource(List<Hotel> hotels);
 }

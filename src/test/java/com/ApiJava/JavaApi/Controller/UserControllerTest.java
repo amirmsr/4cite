@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.HttpMethod;
@@ -27,6 +28,11 @@ import org.springframework.test.web.servlet.MvcResult;
 @WebMvcTest(UserController.class)
 class UserControllerTest extends BaseControllerTest {
 
+//  @BeforeEach
+//  void setUp() {
+//    userRepository.deleteAll();
+//  }
+//
 //  @Test
 //  void createUser() throws Exception {
 //    // Path to be called
