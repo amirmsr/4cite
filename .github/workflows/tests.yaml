@@ -3,10 +3,10 @@ name: Run tests
 on:
   push:
     branches:
-      - 'iyad'
+      - 'main'
   pull_request:
     branches:
-      - 'iyad'
+      - 'main'
 
 jobs:
   tests:
