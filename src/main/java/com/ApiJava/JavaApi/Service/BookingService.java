@@ -1,9 +1,11 @@
 package com.ApiJava.JavaApi.Service;
 
 import com.ApiJava.JavaApi.Model.Booking;
+import com.ApiJava.JavaApi.Model.Hotel;
 import com.ApiJava.JavaApi.Model.User;
 import com.ApiJava.JavaApi.Model.UserRoleEnum;
 import com.ApiJava.JavaApi.Repository.BookingRepository;
+import com.ApiJava.JavaApi.Repository.HotelRepository;
 import com.ApiJava.JavaApi.Service.mapper.BookingMapper;
 import com.ApiJava.JavaApi.Utils.JwtUtil;
 import com.ApiJava.JavaApi.model.BookingDetails;
@@ -20,23 +22,32 @@ public class BookingService {
 
   private final BookingRepository bookingRepository;
 
+  private final HotelRepository hotelRepository;
+
   private final BookingMapper bookingMapper;
 
   private final JwtUtil jwtUtilClass;
 
-  public BookingService(BookingRepository bookingRepository, BookingMapper bookingMapper, JwtUtil jwtUtilClass) {
+  public BookingService(BookingRepository bookingRepository, HotelRepository hotelRepository, BookingMapper bookingMapper, JwtUtil jwtUtilClass) {
     this.bookingRepository = bookingRepository;
+    this.hotelRepository = hotelRepository;
     this.bookingMapper = bookingMapper;
     this.jwtUtilClass = jwtUtilClass;
   }
 
   public BookingDetails post(BookingRequest newBooking, String token) {
     Optional<User> user = jwtUtilClass.getUserFrom(token);
+    Optional<Hotel> hotel = hotelRepository.findById(newBooking.getHotelId());
 
     if (user.isPresent()) {
-      Booking booking = bookingMapper.toEntity(newBooking);
-      booking.setUser(user.get());
-      return bookingMapper.toResource(bookingRepository.save(booking));
+      if (hotel.isPresent()) {
+        Booking booking = bookingMapper.toEntity(newBooking);
+        booking.setUser(user.get());
+        booking.setHotel(hotel.get());
+        return bookingMapper.toResource(bookingRepository.save(booking));
+      } else {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Hôtel non trouvé");
+      }
     }
 
     throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Vous n'êtes pas autorisé à créer une réservation");
